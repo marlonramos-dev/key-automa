@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Automação - Gerador de Senhas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+        .section-divider {
+            border-right: 2px dashed #4b5563;
+        }
+        @media (max-width: 768px) {
+            .section-divider {
+                border-right: none;
+                border-bottom: 2px dashed #4b5563;
+            }
+        }
+        .password-display {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+        .floating-label {
+            transform: translateY(-50%);
+            top: 50%;
+            left: 1rem;
+            transition: all 0.2s ease;
+        }
+        input:focus + .floating-label,
+        input:not(:placeholder-shown) + .floating-label {
+            top: 0;
+            left: 0.75rem;
+            font-size: 0.75rem;
+            background: #374151;
+            padding: 0 0.25rem;
+        }
+        .btn-3d {
+            position: relative;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+        }
+        .btn-3d-blue {
+            background-color: #3b82f6;
+            border-bottom: 4px solid #1d4ed8;
+        }
+        .btn-3d-orange {
+            background-color: #f97316;
+            border-bottom: 4px solid #c2410c;
+        }
+        .btn-3d-purple {
+            background-color: #8b5cf6;
+            border-bottom: 4px solid #6d28d9;
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .input-light {
+            background-color: #374151;
+            border-color: #4b5563;
+            color: white;
+        }
+        .input-light:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+            background-color: #4b5563;
+        }
+        .info-box {
+            background-color: #374151;
+            border-left: 4px solid;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-900 text-gray-200">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="inline-block px-6 py-3 rounded-xl gradient-bg shadow-lg mb-4">
+                <h1 class="text-4xl font-bold text-white">
+                    KEY AUTOMAÇÃO
+                </h1>
+                <p class="text-blue-100">by Marlon Ramos</p>
+            </div>
+            <p class="text-gray-400">Gerador de credenciais para sistemas</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="bg-gray-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="md:flex">
+                <!-- Section 1 - HIRO -->
+                <div class="p-8 md:w-1/3 section-divider card-hover">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-semibold text-blue-400">
+                            <i class="fas fa-user-shield mr-2"></i>
+                            HIRO
+                        </h2>
+                        <span class="bg-blue-900 text-blue-200 text-xs font-medium px-2.5 py-0.5 rounded-full">PADRÃO</span>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="info-box p-4 rounded-lg mb-4 border-l-blue-500">
+                            <p class="text-sm text-gray-300">
+                                <i class="fas fa-info-circle text-blue-400 mr-1"></i>
+                                Clique no botão abaixo para gerar as credenciais padrão do sistema HIRO.
+                            </p>
+                        </div>
+                        
+                        <div class="relative">
+                            <button id="generateHiro" class="w-full btn-3d btn-3d-blue text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-key mr-2"></i>
+                                GERAR SENHA
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="hiroResult" class="hidden mt-6 p-4 bg-gray-700 rounded-lg border border-gray-600">
+                        <h3 class="font-medium text-gray-300 mb-2">Credenciais Geradas:</h3>
+                        <div class="password-display bg-gray-800 p-3 rounded border border-gray-600">
+                            <p class="text-gray-200"><span class="font-semibold text-blue-400">USUÁRIO:</span> MASTER</p>
+                            <p class="text-gray-200"><span class="font-semibold text-blue-400">SENHA:</span> JLB@</p>
+                        </div>
+                        <button id="copyHiro" class="mt-3 text-sm bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded flex items-center">
+                            <i class="fas fa-copy mr-2"></i>
+                            Copiar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 2 - EZTECH (EZCONFIG) -->
+                <div class="p-8 md:w-1/3 section-divider card-hover">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-semibold text-orange-400">
+                            <i class="fas fa-calculator mr-2"></i>
+                            EZTECH
+                        </h2>
+                        <span class="bg-orange-900 text-orange-200 text-xs font-medium px-2.5 py-0.5 rounded-full">EZCONFIG</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="info-box p-4 rounded-lg mb-4 border-l-orange-500">
+                            <p class="text-sm text-gray-300">
+                                <i class="fas fa-info-circle text-orange-400 mr-1"></i>
+                                Insira um valor numérico para calcular o cosseno e gerar a senha (3 dígitos decimais).
+                            </p>
+                        </div>
+                        
+                        <div class="relative mb-4">
+                            <input type="number" id="eztechValue" class="w-full px-4 py-3 rounded-lg input-light focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder=" " step="0.01">
+                            <label for="eztechValue" class="floating-label text-gray-400 pointer-events-none">Valor para cálculo</label>
+                        </div>
+                        
+                        <button id="generateEztech" class="w-full btn-3d btn-3d-orange text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-calculator mr-2"></i>
+                            GERAR SENHA
+                        </button>
+                    </div>
+                    
+                    <div id="eztechResult" class="hidden mt-6 p-4 bg-gray-700 rounded-lg border border-gray-600">
+                        <h3 class="font-medium text-gray-300 mb-2">Senha Gerada:</h3>
+                        <div class="password-display bg-gray-800 p-3 rounded border border-gray-600 mb-2">
+                            <p id="eztechPasswordOutput" class="text-gray-200 font-mono break-all">
+                                <span class="font-semibold text-orange-400">SENHA:</span> <span id="eztechPasswordValue"></span>
+                            </p>
+                        </div>
+                        <button id="copyEztech" class="text-sm bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded flex items-center">
+                            <i class="fas fa-copy mr-2"></i>
+                            Copiar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 3 - CBC -->
+                <div class="p-8 md:w-1/3 card-hover">
+                    <h2 class="text-2xl font-semibold text-purple-400 mb-6">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        CBC
+                    </h2>
+                    
+                    <div class="mb-4">
+                        <div class="info-box p-4 rounded-lg mb-4 border-l-purple-500">
+                            <p class="text-sm text-gray-300">
+                                <i class="fas fa-info-circle text-purple-400 mr-1"></i>
+                                Use a data/hora atual ou selecione manualmente para gerar a senha (ano - mês - dia - hora).
+                            </p>
+                        </div>
+                        
+                        <div class="relative mb-4">
+                            <input type="datetime-local" id="cbcDate" class="w-full px-4 py-3 rounded-lg input-light focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                        
+                        <button id="generateCbc" class="w-full btn-3d btn-3d-purple text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-key mr-2"></i>
+                            GERAR SENHA
+                        </button>
+                    </div>
+                    
+                    <div id="cbcResult" class="hidden mt-6 p-4 bg-gray-700 rounded-lg border border-gray-600">
+                        <h3 class="font-medium text-gray-300 mb-2">Senha Gerada:</h3>
+                        <div class="password-display bg-gray-800 p-3 rounded border border-gray-600 mb-2">
+                            <p id="cbcPasswordOutput" class="text-gray-200 font-mono break-all">
+                                <span class="font-semibold text-purple-400">SENHA:</span> <span id="cbcPasswordValue"></span>
+                            </p>
+                        </div>
+                        <button id="copyCbc" class="text-sm bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded flex items-center">
+                            <i class="fas fa-copy mr-2"></i>
+                            Copiar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>© 2023 Key Automação - Todos os direitos reservados</p>
+            <p class="mt-1">Desenvolvido por Marlon Ramos</p>
+        </footer>
+    </div>
+
+    <script>
+        // Set current date/time as default for CBC section
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            document.getElementById('cbcDate').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+        });
+
+        // Hiro Section
+        document.getElementById('generateHiro').addEventListener('click', function() {
+            const resultDiv = document.getElementById('hiroResult');
+            resultDiv.classList.remove('hidden');
+            
+            // Scroll to show the result
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        
+        document.getElementById('copyHiro').addEventListener('click', function() {
+            const text = "USUÁRIO=MASTER\nSENHA=JLB@";
+            navigator.clipboard.writeText(text).then(function() {
+                const button = document.getElementById('copyHiro');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
+                button.classList.remove('bg-gray-600', 'hover:bg-gray-500');
+                button.classList.add('bg-green-600', 'text-white');
+                
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-600', 'text-white');
+                    button.classList.add('bg-gray-600', 'hover:bg-gray-500');
+                }, 2000);
+            });
+        });
+        
+        // Eztech Section
+        document.getElementById('generateEztech').addEventListener('click', function() {
+            const inputValue = parseFloat(document.getElementById('eztechValue').value);
+            
+            if (isNaN(inputValue)) {
+                alert('Por favor, insira um valor numérico válido');
+                return;
+            }
+            
+            // Calculate cosine (input is in degrees, convert to radians)
+            const radians = inputValue * Math.PI / 180;
+            let cosineValue = Math.cos(radians);
+            
+            // Format to show only 3 decimal places
+            const formattedValue = cosineValue.toFixed(5); // Using 5 to ensure we have enough precision
+            
+            // Extract the 3 digits after decimal point
+            const decimalPart = formattedValue.toString().split('.')[1] || '000';
+            const password = decimalPart.substring(0, 3);
+            
+            // If cosine is negative, we'll use absolute value for password (as requested)
+            const absolutePassword = Math.abs(parseInt(password)).toString().padStart(3, '0');
+            
+            document.getElementById('eztechPasswordValue').textContent = absolutePassword;
+            document.getElementById('eztechResult').classList.remove('hidden');
+            
+            // Scroll to show the result
+            document.getElementById('eztechResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        
+        document.getElementById('copyEztech').addEventListener('click', function() {
+            const text = document.getElementById('eztechPasswordValue').textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                const button = document.getElementById('copyEztech');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
+                button.classList.remove('bg-gray-600', 'hover:bg-gray-500');
+                button.classList.add('bg-green-600', 'text-white');
+                
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-600', 'text-white');
+                    button.classList.add('bg-gray-600', 'hover:bg-gray-500');
+                }, 2000);
+            });
+        });
+
+        // CBC Section
+        document.getElementById('generateCbc').addEventListener('click', function() {
+            const dateTimeValue = document.getElementById('cbcDate').value;
+            
+            if (!dateTimeValue) {
+                alert('Por favor, selecione uma data e hora válidas');
+                return;
+            }
+            
+            const dateTime = new Date(dateTimeValue);
+            const year = dateTime.getFullYear();
+            const month = dateTime.getMonth() + 1; // Months are 0-based
+            const day = dateTime.getDate();
+            const hours = dateTime.getHours();
+            
+            // Calculate password: year - month - day - hours
+            const password = year - month - day - hours;
+            
+            document.getElementById('cbcPasswordValue').textContent = password;
+            document.getElementById('cbcResult').classList.remove('hidden');
+            
+            // Scroll to show the result
+            document.getElementById('cbcResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        
+        document.getElementById('copyCbc').addEventListener('click', function() {
+            const text = document.getElementById('cbcPasswordValue').textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                const button = document.getElementById('copyCbc');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
+                button.classList.remove('bg-gray-600', 'hover:bg-gray-500');
+                button.classList.add('bg-green-600', 'text-white');
+                
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-600', 'text-white');
+                    button.classList.add('bg-gray-600', 'hover:bg-gray-500');
+                }, 2000);
+            });
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=MARLONRGS/key-automa-o" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>
